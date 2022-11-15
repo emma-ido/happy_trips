@@ -47,8 +47,8 @@ class Ref {
 }
 
 
-echo Ref::generateRandomString(8, 255);
+// echo Ref::generateRandomString(8, 255);
 
-echo "<br>". (255 & 2) ."<br>";
+// echo "<br>". (255 & 2) ."<br>";
 
 ?>

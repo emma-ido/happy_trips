@@ -46,6 +46,12 @@ class Bus extends db_connection {
 		return $this->db_fetch_one($sql)["make"];
 	}
 
+	function get_bus_image($bus_id) {
+		$bus_make = $this->get_bus_make($bus_id);
+		$sql = "SELECT image FROM bus_makes WHERE make = '$bus_make'";
+		return $this->db_fetch_one($sql)["image"];
+	}
+
 	function get_seat_numbers($bus_id) {
 		$bus_make = $this->get_bus_make($bus_id);
 		
@@ -65,7 +71,7 @@ class Bus extends db_connection {
 			case 'NAPOLEAN city liner N1116':
 				return array('L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8');
 				break;
-
+				
 			default:
 				return array();
 				break;
