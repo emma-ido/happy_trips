@@ -20,6 +20,7 @@ class Bus extends db_connection {
 		return $this->db_fetch_one($sql);
 	}
 
+
 	function get_bus_capacity($bus_id) {
 		$sql = "SELECT capacity FROM bus WHERE id=$bus_id";
 		return $this->db_fetch_one($sql)["capacity"];

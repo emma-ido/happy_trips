@@ -6,9 +6,9 @@ include_once("trip_class.php");
 
 class Ticket extends db_connection {
 
-	function book_ticket($customer_id, $trip_id, $price) {
+	function book_ticket($customer_id, $trip_id, $price, $seats=1) {
 		$trip = new Trip();
-		if(!$trip->book_seat($trip_id)) {
+		if(!$trip->book_seat($trip_id, $seats)) {
 			return false;
 		}
 
@@ -23,10 +23,35 @@ class Ticket extends db_connection {
 		}
 	}
 
+	function get_last_id($customer_id) {
+		$sql = "SELECT id FROM tickets WHERE customer_id=$customer_id ORDER BY id DESC LIMIT 1";
+		return $this->db_fetch_one($sql)["id"];
+	}
+
+	function get_user_tickets($customer_id) {
+		$sql = "SELECT * FROM tickets WHERE customer_id=$customer_id ORDER BY date_bought DESC";
+		return $this->db_fetch_all($sql);
+	}
+
 
 	function has_ticket($customer_id, $trip_id) {
 		$sql = "SELECT COUNT(*) FROM tickets WHERE customer_id=$customer_id AND trip_id=$trip_id";
 		return $this->db_fetch_one($sql)["COUNT(*)"] > 0;
+	}
+
+	function get_ticket_price($ticket_id) {
+		$sql = "SELECT price FROM tickets WHERE id=$ticket_id";
+		return $this->db_fetch_one($sql)["price"];
+	}
+
+	function get_ticket_details($ticket_id) {
+		$sql = "SELECT * FROM tickets WHERE id=$ticket_id";
+		return $this->db_fetch_one($sql);	
+	}
+
+	function get_ticket_seats($ticket_id) {
+		$sql = "SELECT seat_number FROM ticket_seats WHERE ticket_id=$ticket_id";
+		return $this->db_fetch_all($sql);
 	}
 
 	function get_ticket_id($customer_id, $trip_id) {

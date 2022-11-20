@@ -1,0 +1,25 @@
+body {
+  background-image: url('../images/site/ash-gerlach-6fF-Ojxov6o-unsplash.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  /*filter: blur(8px);
+  -webkit-filter: blur(8px);*/
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+body.home {
+  background-image: url('../images/site/jonathan-borba-LR5O79shvro-unsplash.jpg');
+}
+
+body.history {
+  background-image: url('../images/site/annie-spratt-tG822f1XzT4-unsplash.jpg');
+}
+
+
+body.view {
+  background-image: url('../images/site/ina-carolino-6CrcveXyr6U-unsplash.jpg');
+}

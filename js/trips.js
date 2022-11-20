@@ -1,4 +1,29 @@
 
+
+function validateNewTrip() {
+	var departure_time = $('#departure_time');
+	var arrival_time = $('#arrival_time');
+
+	// console.log(departure_time.val());
+	// console.log(arrival_time.val());
+
+	var departureTime = new Date(departure_time.val());
+	var arrivalTime = new Date(arrival_time.val());
+
+	// console.log(departureTime.getTime() == arrivalTime.getTime());
+
+	if(departureTime.getTime() >= arrivalTime.getTime()) {
+		$('#invalid_time').html("Arrival Time must be after departure time");
+		$('#invalid_time').css("display", "inline-block");
+		return;
+	} else {
+		$('#invalid_time').css("display", "none");
+	}
+
+	$('#add_new_trip_trigger').click();
+}
+
+
 function conFirmBooking() {
 	var seatsSelected = $('#seats').text();
 
@@ -93,6 +118,8 @@ function payWithPaystack() {
 
   let handler = PaystackPop.setup({
     // key: 'pk_test_xxxxxxxxxx', // Replace with your public key
+    // my test_key: pk_test_618b2a128cb38615a9db7357f9d5e8b5b85ebb13
+    // live key: pk_live_bd5356607a881f3a0d6843b75d3172b74b9675cd
     key: 'pk_test_618b2a128cb38615a9db7357f9d5e8b5b85ebb13',
     email: document.getElementById("email-address").value,
     currency: 'GHS',
@@ -104,17 +131,33 @@ function payWithPaystack() {
     },
     callback: function(response){
       let message = 'Payment complete! Reference: ' + response.reference;
-      alert(message);
+      // alert(response);
+      // console.log(response);
 
+      if(response.status == "success") {
+      	// $.get('../actions/process_paystack.php?ref=' + response.reference, function(data) {
+        // 	alert(data);
+      	// });	
+      	demo(3000);
+      	$('#select_seats_form').submit();
+      } else {
+      	alert("Transaction Failed!");
+      }
       
-      $.get('../actions/process_paystack.php?ref=' + response.reference, function(data) {
-        alert(data);
-      });
 
-      $('#select_seats_form').submit();
+      // $('#select_seats_form').submit();
     
     }
   });
 
   handler.openIframe();
+}
+
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function demo(i) {
+	await sleep(i * 1000);  
 }

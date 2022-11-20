@@ -7,28 +7,34 @@ include_once("ticket_class.php");
 class Trip extends db_connection {
 
 
-	function new_trip($bus_id, $driver_id, $trip_type, $origin, $destination, $departure_time, $arrival_time, $booking_status) {
+	function new_trip($bus_id, $trip_type, $origin, $destination, $departure_time, $arrival_time, $price, $booking_status="open") {
 
 		$bus = new Bus();
 		$capacity = $bus->get_bus_capacity($bus_id);
 
-		$sql = "INSERT INTO trips(bus_id, driver_id, trip_type, origin, destination, departure_time, arrival_time, seats_available, booking_status) VALUES ($bus_id, $driver_id, '$trip_type', '$origin', '$destination', '$departure_time', '$arrival_time', $capacity, '$booking_status')";
-		
+		$sql = "INSERT INTO trips(bus_id, trip_type, origin, destination, departure_time, arrival_time, seats_available, booking_status, price) VALUES ($bus_id, '$trip_type', $origin, $destination, '$departure_time', '$arrival_time', $capacity, '$booking_status', $price)";
+		// echo $sql;
 		return $this->db_query($sql);
 	}
 
+	function close_all_passed_trips() {
+		$date = date("Y-m-d H:i:s");
+		$sql = "UPDATE trips SET booking_status='closed' WHERE departure_time < '$date'";
+		$this->db_query($sql);
+	}
+
 	function get_trip_by_id($trip_id) {
-		$sql = "SELECT * FROM trips WHERE id=$trip_id";
+		$sql = "SELECT * FROM trips WHERE id=$trip_id ORDER BY departure_time DESC";
 		return $this->db_fetch_one($sql);
 	}
 
-	function get_one_way_trips($origin, $destination, $departure_time) {
+	function get_one_way_trips($origin, $destination, $departure_time, $seats=1) {
 		$departure_time.= " 00:00:00";
 		$next_day = date_create($departure_time);
 		date_modify($next_day, "+1 day");
 		$next_day = date_format($next_day, "Y-m-d");
 
-		$sql = "SELECT * FROM trips WHERE origin='$origin' AND destination='$destination' AND departure_time >= '$departure_time' AND departure_time < '$next_day' AND seats_available > 0";
+		$sql = "SELECT * FROM trips WHERE origin='$origin' AND destination='$destination' AND departure_time >= '$departure_time' AND departure_time < '$next_day' AND seats_available > 0 AND booking_status = 'open' AND seats_available >= $seats";
 		// echo $sql;
 		return $this->db_fetch_all($sql);
 	}
@@ -44,10 +50,15 @@ class Trip extends db_connection {
 		return $this->db_fetch_one($sql)["destination_name"];
 	}
 
+	function get_trip_types() {
+		$sql = "SELECT * FROM trip_types";
+		return $this->db_fetch_all($sql);
+	}
 
-	function has_available_seat($trip_id) {
+
+	function has_available_seat($trip_id, $seats=1) {
 		$seats_left = $this->get_seats_left($trip_id);
-		if($seats_left == 0) {
+		if($seats_left-$seats < 0) {
 			return false;
 		} else {
 			return true;
@@ -112,11 +123,11 @@ class Trip extends db_connection {
 		return $this->db_fetch_one($sql)["bus_id"];
 	}
 
-	function book_seat($trip_id) {
-		if(!$this->has_available_seat($trip_id)) {
+	function book_seat($trip_id, $seats=1) {
+		if(!$this->has_available_seat($trip_id, $seats)) {
 			return false;
 		}
-		$updated_seats = $this->get_seats_left($trip_id) - 1;
+		$updated_seats = $this->get_seats_left($trip_id) - $seats;
 		$sql = "UPDATE trips SET seats_available=$updated_seats WHERE id=$trip_id";
 		return $this->db_query($sql);
 	}

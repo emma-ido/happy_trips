@@ -19,6 +19,25 @@ function getUserId() {
 	return $_SESSION['customer_id'];
 }
 
+
+function isEmployee() {
+	if(!isLoggedIn()) {
+		return false;
+	}
+	if(isset($_SESSION['employee_id'])) {
+		return $_SESSION['employee_id'];
+	}
+}
+
+function getEmployeeId() {
+	if(isLoggedIn() && isset($_SESSION['employee_id'])) {
+		return $_SESSION['employee_id'];
+	} else {
+		return -1;
+	}
+}
+
+
 //function to check for role (admin, customer, etc)
 
 

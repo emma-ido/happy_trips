@@ -6,17 +6,17 @@ include_once("generate_referral_code_class.php");
 class Customer extends db_connection {
 
 
-	function new_customer($first_name, $last_name, $email, $pass, $phone_number, $referral_code) {
+	function new_customer($first_name, $last_name, $email, $pass, $phone_number, $referral_code=null) {
 		$pass = password_hash($pass, PASSWORD_DEFAULT);
 		$sql = "INSERT INTO customer(first_name, last_name, email, pass, phone_number) VALUES ('$first_name', '$last_name', '$email', '$pass', '$phone_number')";
 		
 		if($this->emailExists($email)) {
-			return false;
+			return array(false, "Account already exists. Login to your account");
 		}
 
 		$result = $this->db_query($sql);
 		
-		$customer_id = $this->get_customer_with_email($email)['id'];
+		/*$customer_id = $this->get_customer_with_email($email)['id'];
 		if($result) {
 			// $cutomer_id = $this->get_id_from_email($email);
 			echo "<br>$customer_id<br>";
@@ -27,9 +27,17 @@ class Customer extends db_connection {
 			if($this->refCodeExists($referral_code)) {
 				$this->use_referall_code($customer_id, $referral_code);
 			}
+		}*/
+		if($result) {
+			return array($result, "Successfuly created account. Login to coninue");
+		} else {
+			return array($result, "Error creating new account");
 		}
+	}
 
-		return $result;
+	function get_customer_name($customer_id) {
+		$sql = "SELECT first_name, last_name FROM customer WHERE id=$customer_id";
+		return $this->db_fetch_one($sql);
 	}
 
 

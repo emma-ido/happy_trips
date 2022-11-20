@@ -9,9 +9,6 @@ include_once("../settings/core.php");
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav">
       
-      <a class="nav-link" href="../view/trips.php">Find Trip <span class="sr-only">(current)</span></a>
-      
-      
       <?php
       if(!isLoggedIn()) {
         echo "<li class='nav-item'>
@@ -21,10 +18,13 @@ include_once("../settings/core.php");
                 <a class='nav-link' href='../login/login.php'>Login</a>
               </li>";
       } else {
-        if(isset($_SESSION['customer_id'])) {
+        if(isEmployee()) {
           echo "<li class='nav-item'>
-                <a class='nav-link' href='../view/my_trips.php'>My Trips</a>
-              </li>";
+                	<a class='nav-link' href='add_trip_form.php'>Add trip</a>
+              	</li>
+              	<li class='nav-item'>
+                	<a class='nav-link' href='modify_trip.php'>Modify Trips</a>
+              	</li>";
         }
         echo "
               <li class='nav-item'>

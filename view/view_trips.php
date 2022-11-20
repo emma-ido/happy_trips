@@ -13,12 +13,13 @@ if(isset($_POST["find_trips"])) {
 
 	$origin = get_destination($travelling_from);
 	$destination = get_destination($travelling_to);
+	$seats = $_POST["seats"];
 
 	// echo "FROM: $travelling_from, TO: $travelling_to<br>";
 
 	// $found_trips = array();
 	if($has_return === "NO") {
-		$found_trips = get_one_way_trips($travelling_from, $travelling_to, $departure_date);
+		$found_trips = get_one_way_trips($travelling_from, $travelling_to, $departure_date, $seats);
 		// print_r($found_trips);
 	}
 
@@ -33,8 +34,9 @@ if(isset($_POST["find_trips"])) {
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/background.css">
 </head>
-<body>
+<body class="view">
 	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 	<?php include_once("../settings/navbar.php"); ?>
 
@@ -48,13 +50,12 @@ if(isset($_POST["find_trips"])) {
 	<br>
 
 	<div class="container">
-		<?php echo "<h4>$origin --> $destination</h4>"; ?>
 		<div class="row">
 			<div class='card' style="width: 100%;">
 				<div class='card-body'>
 					<?php
 					echo "
-					<span class='font-weight-bold'>SELECT YOUR TRIP</span>
+					<h4>$origin --> $destination</h4>
 					";
 					?>
 
@@ -67,8 +68,11 @@ if(isset($_POST["find_trips"])) {
 						$type = $trip['trip_type'];
 						$price = $trip['price'];
 						$seats_left = $trip['seats_available'];
-						$departure_time = $trip['departure_time'];
-						$departure_time = explode(" ", $departure_time)[1];
+						// $departure_time = $trip['departure_time'];
+						// $departure_time = explode(" ", $departure_time)[1];
+
+						$departure_time = date("F j, Y g:i a",strtotime($trip["departure_time"]));
+
 						$bus_id = $trip['bus_id'];
 						$bus_image = get_bus_image($bus_id);
 						$html = "
@@ -107,7 +111,6 @@ if(isset($_POST["find_trips"])) {
 			</div>
 		</div>
 	</div>
-
 
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

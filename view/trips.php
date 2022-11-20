@@ -8,8 +8,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/background.css">
 </head>
-<body>
+<body class="home">
 	<script type="text/javascript" src="../js/trips.js"></script>
 	<?php include_once("../settings/navbar.php") ?>;
 
@@ -19,7 +20,7 @@
 		</div>
 		<div class='col-5'>
 			<div class='card' style='padding: 10px;border-radius: 20px;'>
-				<ul class='nav justify-content-center'>
+				<!-- <ul class='nav justify-content-center'>
 				  <li class='nav-item'>
 				    <a class='nav-link active' href='#'>Book a seat</a>
 				  </li>
@@ -32,11 +33,14 @@
 				  <li class='nav-item'>
 				    <a class='nav-link disabled' href='#'>Disabled</a>
 				  </li>
-				</ul>
+				</ul> -->
+				
 				<div class='card-body'>
+					<h2 style="text-align: center;">Find a trip</h2>
+				<hr>
 					<div class='row'>
-						<div class='col-md-auto'><button type='button' id="oneWay" onclick="oneWay()" class='btn btn-outline-info active'>One Way</button></div>
-						<div class='col'><button type='button' id="roundTrip" onclick="roundTrip()" class='btn btn-outline-info'>Round Trip</button></div>
+						<div class='col-md-auto' style="display: none;"><button type='button' id="oneWay" onclick="oneWay()" class='btn btn-outline-info active'>One Way</button></div>
+						<div class='col' style="display: none;"><button type='button' id="roundTrip" onclick="roundTrip()" class='btn btn-outline-info'>Round Trip</button></div>
 					</div>
 					<br>
 					<form method="POST" id="findTripForm" action="view_trips.php">
